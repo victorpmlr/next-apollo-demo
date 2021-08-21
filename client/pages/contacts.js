@@ -12,6 +12,10 @@ const Contacts = () => {
     variables: { first: 10 },
   })
 
+  const onChangeSearch = useCallback((event) => {
+    console.log(event.target.value)
+  })
+
   if (error) {
     return <code>{JSON.stringify(error)}</code>
   }
@@ -22,6 +26,17 @@ const Contacts = () => {
 
   return (
     <div className={styles.contacts}>
+      <div className={styles.search}>
+        <input
+          // ref={inputRef}
+          type="text"
+          name="search-input"
+          id={'search-input'}
+          placeholder="Search"
+          onChange={onChangeSearch}
+          className={styles.searchInput}
+        />
+      </div>
       <div className={styles.grid}>
         {data.people?.map((person, i) => (
           <ContactCardComp key={i} {...person} />

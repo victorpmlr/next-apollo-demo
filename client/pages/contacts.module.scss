@@ -1,5 +1,24 @@
 
 .contacts {
+  .search {
+    width: 100%;
+    max-width: 30rem;
+    margin: 0 auto;
+
+    &Input {
+      width: 100%;
+      font-size: 120%;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      border: solid 1px lightgray;
+      outline: none;
+
+      &:focus {
+        border-color: gray;
+      }
+    }
+  }
+
   .grid {
     display: flex;
     flex-wrap: wrap;
