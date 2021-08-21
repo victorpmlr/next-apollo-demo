@@ -1,5 +1,7 @@
 
 .contacts {
+  font-family: 'Gill Sans', Calibri, sans-serif;
+
   .search {
     width: 100%;
     max-width: 30rem;
@@ -16,6 +18,11 @@
       &:focus {
         border-color: gray;
       }
+    }
+
+    &Status {
+      text-align: center;
+      margin: 2rem;
     }
   }
 
