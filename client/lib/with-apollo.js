@@ -3,7 +3,7 @@ import { HttpLink } from 'apollo-link-http'
 
 const apolloConfig = {
   link: new HttpLink({
-    uri: 'https://faker-graphql.now.sh/graphql'
+    uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT || `http://localhost:${process.env.PORT || 5000}/graphql`
   })
 }
 
