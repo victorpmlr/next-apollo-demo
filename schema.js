@@ -49,13 +49,21 @@ module.exports = new GraphQLSchema({
           after: {
             type: GraphQLInt,
           },
+          name: {
+            type: GraphQLString,
+          },
         },
         resolve(_, args) {
           const first = args.first
           const after = args.after || 0
-          return data.people.slice(after, after + first)
+          if(args.name && args.name.length < 3) return []
+          let people = data.people
+          if(args.name) {
+            people = people.filter((person) => person.name.toLowerCase().indexOf(args.name.toLowerCase()) !== -1)
+          }
+          return people.slice(after, after + first)
         }
-      }
+      },
     }
   })
 })
