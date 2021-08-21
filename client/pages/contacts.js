@@ -1,6 +1,7 @@
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useQuery, gql } from '@apollo/client'
+import styles from './contacts.module.scss'
 
 const ContactCardComp = dynamic(() => import('../components/ContactCard'), {
   loading: () => <span>...</span>,
@@ -20,10 +21,12 @@ const Contacts = () => {
   }
 
   return (
-    <div>
-      {data.people?.map((person, i) => (
-        <ContactCardComp key={i} {...person} />
-      ))}
+    <div className={styles.contacts}>
+      <div className={styles.grid}>
+        {data.people?.map((person, i) => (
+          <ContactCardComp key={i} {...person} />
+        ))}
+      </div>
       <br />
       <br />
       <Link href="/">

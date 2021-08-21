@@ -1,0 +1,12 @@
+
+.contacts {
+  .grid {
+    display: flex;
+    flex-wrap: wrap;
+
+    & > * {
+      flex: 0 1 20rem;
+      margin: 1rem;
+    }
+  }
+}

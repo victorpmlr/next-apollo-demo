@@ -1,0 +1,25 @@
+
+.contactCard {
+  border: solid 1px mistyrose;
+  border-radius: 1rem;
+  background-color: seashell;
+  padding: 1rem;
+  font-family: 'Gill Sans', Calibri, sans-serif;
+
+  p {
+    margin: 0;
+    padding: 0;
+  }
+
+  h3 {
+    text-align: center;
+  }
+
+  div {
+    margin: 0.5rem 0;
+  }
+
+  a {
+    color: teal;
+  }
+}
