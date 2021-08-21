@@ -1,9 +1,14 @@
 import Link from 'next/link'
 
-export default () => (
+const About = () => (
   <div>
     About Page
-    <br/><br/>
-    <Link href="/"><a>Go Back</a></Link>
+    <br />
+    <br />
+    <Link href="/">
+      <a>Go Back</a>
+    </Link>
   </div>
 )
+
+export default About

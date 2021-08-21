@@ -1,4 +1,4 @@
-import { ApolloProvider } from "@apollo/client"
+import { ApolloProvider } from '@apollo/client'
 import { apolloClient } from '../lib/apollo'
 
 const App = ({ Component, pageProps }) => {
