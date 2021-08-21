@@ -1,48 +1,63 @@
-import dynamic from 'next/dynamic'
+import ContactCard from '../components/ContactCard'
 import Link from 'next/link'
-import { useQuery, gql } from '@apollo/client'
+import { gql } from '@apollo/client'
 import styles from './contacts.module.scss'
+import { useCallback, useState } from 'react'
+import { apolloClient } from '../lib/apollo'
 
-const ContactCardComp = dynamic(() => import('../components/ContactCard'), {
-  loading: () => <span>...</span>,
-})
-
-const Contacts = () => {
-  const { data, loading, error } = useQuery(query, {
-    variables: { first: 10 },
-  })
+const Contacts = ({ people: prefetchedPeople }) => {
+  const [people, setPeople] = useState(prefetchedPeople)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState()
 
   const onChangeSearch = useCallback((event) => {
     console.log(event.target.value)
   })
 
-  if (error) {
-    return <code>{JSON.stringify(error)}</code>
-  }
-
-  if (loading) {
-    return <p>...</p>
-  }
+  const handleLoadMore = useCallback(async () => {
+    setLoading(true)
+    const result = await apolloClient.query({
+      query,
+      variables: { first: 20, after: people.length },
+    })
+    if (result.data?.people) {
+      setPeople((ppl) => ppl.concat(result.data.people))
+    }
+    setError(result.error)
+    setLoading(false)
+  }, [people.length])
 
   return (
     <div className={styles.contacts}>
       <div className={styles.search}>
         <input
-          // ref={inputRef}
           type="text"
           name="search-input"
-          id={'search-input'}
+          id="search-input"
           placeholder="Search"
           onChange={onChangeSearch}
           className={styles.searchInput}
         />
       </div>
       <div className={styles.grid}>
-        {data.people?.map((person, i) => (
-          <ContactCardComp key={i} {...person} />
+        {people.map((person, i) => (
+          <ContactCard key={i} {...person} />
         ))}
       </div>
       <br />
+      <div className={styles.loadMore}>
+        <button
+          disabled={loading}
+          type="button"
+          id="load-more"
+          onClick={handleLoadMore}
+          className={styles.loadMoreButton}
+        >
+          {loading ? 'Loading' : 'Load more'}
+        </button>
+      </div>
+      <br />
+      {error && <pre>{JSON.stringify(error)}</pre>}
       <br />
       <Link href="/">
         <a>Home</a>
@@ -56,8 +71,8 @@ const Contacts = () => {
 }
 
 const query = gql`
-  query People($first: Int) {
-    people(first: $first) {
+  query People($first: Int!, $after: Int) {
+    people(first: $first, after: $after) {
       name
       address {
         streetAddress
@@ -69,5 +84,17 @@ const query = gql`
     }
   }
 `
+
+export const getStaticProps = async () => {
+  const result = await apolloClient.query({
+    query,
+    variables: { first: 20 },
+  })
+  return {
+    props: {
+      people: result.data?.people || [],
+    },
+  }
+}
 
 export default Contacts
