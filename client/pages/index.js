@@ -1,9 +1,11 @@
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
-import Name from '../components/Name'
+
+const NameComp = dynamic(() => import('../components/Name'), { loading: () => <span>...</span> })
 
 const Page = () => (
   <div>
-    Welcome, <Name />
+    Welcome, <NameComp />
     <br />
     <br />
     <Link href="/about">
