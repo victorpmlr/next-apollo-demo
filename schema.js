@@ -1,15 +1,19 @@
 const {
   GraphQLSchema,
   GraphQLObjectType,
+  GraphQLID,
   GraphQLString,
   GraphQLInt,
   GraphQLList,
+  GraphQLNonNull
 } = require('graphql')
 const faker = require('faker')
+const data = require('./data.json')
 
 const PersonType = new GraphQLObjectType({
   name: 'Person',
   fields: () => ({
+    id: { type: GraphQLID },
     name: { type: GraphQLString },
     address: {
       type: new GraphQLObjectType({
@@ -40,21 +44,16 @@ module.exports = new GraphQLSchema({
         type: new GraphQLList(PersonType),
         args: {
           first: {
+            type: new GraphQLNonNull(GraphQLInt),
+          },
+          after: {
             type: GraphQLInt,
           },
         },
         resolve(_, args) {
-          const first = args.first || 2000
-          return Array.from(Array(first)).map(() => ({
-            name: faker.name.findName(),
-            address: {
-              streetAddress: faker.address.streetAddress,
-              city: faker.address.city,
-              country: faker.address.country,
-            },
-            email: faker.internet.email(),
-            phone: faker.phone.phoneNumber(),
-          }))
+          const first = args.first
+          const after = args.after || 0
+          return data.people.slice(after, after + first)
         }
       }
     }
