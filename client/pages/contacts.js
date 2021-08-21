@@ -2,17 +2,42 @@ import ContactCard from '../components/ContactCard'
 import Link from 'next/link'
 import { gql } from '@apollo/client'
 import styles from './contacts.module.scss'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { apolloClient } from '../lib/apollo'
 
 const Contacts = ({ people: prefetchedPeople }) => {
   const [people, setPeople] = useState(prefetchedPeople)
+  const [searchTerm, setSearchTerm] = useState()
+  const [searching, setSearching] = useState(false)
+  const [searchResult, setSearchResult] = useState()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState()
 
-  const onChangeSearch = useCallback((event) => {
-    console.log(event.target.value)
-  })
+  useEffect(() => {
+    if (!searchTerm || searchTerm?.length < 3) {
+      setSearching(false)
+      setSearchResult()
+      return
+    }
+    setSearchResult([])
+    setSearching(true)
+
+    const delayDebounce = setTimeout(async () => {
+      const result = await apolloClient.query({
+        query,
+        variables: { first: 20, name: searchTerm },
+      })
+      if (result.data?.people) {
+        setSearchResult(result.data.people)
+      }
+      setError(result.error)
+      setSearching(false)
+    }, 300)
+
+    return () => {
+      clearTimeout(delayDebounce)
+    }
+  }, [searchTerm])
 
   const handleLoadMore = useCallback(async () => {
     setLoading(true)
@@ -35,27 +60,38 @@ const Contacts = ({ people: prefetchedPeople }) => {
           name="search-input"
           id="search-input"
           placeholder="Search"
-          onChange={onChangeSearch}
+          onChange={(event) => setSearchTerm(event.target.value)}
           className={styles.searchInput}
         />
       </div>
+      {searching ? (
+        <div className={styles.searchStatus}>{`Searching for "${searchTerm}"...`}</div>
+      ) : undefined}
+      {searchResult?.length ? (
+        <div className={styles.searchStatus}>{`Results for "${searchTerm}":`}</div>
+      ) : undefined}
+      {!searching && searchResult?.length === 0 && (
+        <div className={styles.searchStatus}>{`No results for "${searchTerm}"`}</div>
+      )}
       <div className={styles.grid}>
-        {people.map((person, i) => (
+        {(searchResult || people).map((person, i) => (
           <ContactCard key={i} {...person} />
         ))}
       </div>
       <br />
-      <div className={styles.loadMore}>
-        <button
-          disabled={loading}
-          type="button"
-          id="load-more"
-          onClick={handleLoadMore}
-          className={styles.loadMoreButton}
-        >
-          {loading ? 'Loading' : 'Load more'}
-        </button>
-      </div>
+      {!searchResult && (
+        <div className={styles.loadMore}>
+          <button
+            disabled={loading}
+            type="button"
+            id="load-more"
+            onClick={handleLoadMore}
+            className={styles.loadMoreButton}
+          >
+            {loading ? 'Loading' : 'Load more'}
+          </button>
+        </div>
+      )}
       <br />
       {error && <pre>{JSON.stringify(error)}</pre>}
       <br />
@@ -71,8 +107,8 @@ const Contacts = ({ people: prefetchedPeople }) => {
 }
 
 const query = gql`
-  query People($first: Int!, $after: Int) {
-    people(first: $first, after: $after) {
+  query People($first: Int!, $after: Int, $name: String) {
+    people(first: $first, after: $after, name: $name) {
       name
       address {
         streetAddress
