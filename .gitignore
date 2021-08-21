@@ -1,2 +1,12 @@
-node_modules
+# Dependency directories
+**/node_modules/
 
+# next.js
+**/.next/
+
+# dotenv environment variables file
+.env
+.env.local
+
+# macOS
+.DS_Store
