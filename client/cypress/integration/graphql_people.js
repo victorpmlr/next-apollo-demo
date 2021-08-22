@@ -22,6 +22,20 @@ describe('GraphQL people query', () => {
     })
   })
 
+  it('fetch 101 people', () => {
+    cy.request({
+      method: 'POST',
+      url: 'http://localhost:5000/graphql',
+      body: {
+        query,
+        variables: { first: 101, },
+      },
+    }).then((res) => {
+      expect(res.body.errors.length).to.equal(1)
+      expect(res.body.errors[0].message).to.equal('Not Authorised!')
+    })
+  })
+
   it('fetch 20 people with offset', () => {
     cy.request({
       method: 'POST',
