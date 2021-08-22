@@ -6,7 +6,7 @@ const resolvers = {
   Query: {
     name: () => faker.name.findName(),
     people: (_, args) => {
-      const { first, after, name } = args
+      const { first, offset, name } = args
       if (first > 100) throw new UserInputError('First is limited to 100.')
       if (name && name.length < 3) return []
       const people = name
@@ -14,7 +14,7 @@ const resolvers = {
             (person) => person.name.toLowerCase().indexOf(name.toLowerCase()) !== -1,
           )
         : data.people
-      return people.slice(after, after + first)
+      return people.slice(offset, offset + first)
     },
   },
 }

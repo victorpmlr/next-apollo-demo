@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client'
 
 const peopleQuery = gql`
-  query People($first: Int!, $after: Int, $name: String) {
-    people(first: $first, after: $after, name: $name) {
+  query People($first: Int!, $offset: Int, $name: String) {
+    people(first: $first, offset: $offset, name: $name) {
       name
       address {
         streetAddress

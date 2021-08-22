@@ -20,6 +20,6 @@ export interface PeopleData {
 
 export interface PeopleVars {
   first: number
-  after?: number
+  offset?: number
   name?: string
 }

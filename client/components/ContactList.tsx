@@ -54,7 +54,7 @@ const ContactList = ({ people: prefetchedPeople }: ContactListProps): JSX.Elemen
     try {
       const result = await apolloClient.query<PeopleData, PeopleVars>({
         query: peopleQuery,
-        variables: { first: 20, after: people.length },
+        variables: { first: 20, offset: people.length },
       })
       if (result.data?.people) {
         setPeople((ppl) => ppl.concat(result.data.people))
