@@ -1,6 +1,6 @@
 import ContactCard from './ContactCard'
 import styles from './ContactList.module.scss'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, useMemo } from 'react'
 import { apolloClient } from '../lib/apollo'
 import peopleQuery from '../lib/peopleQuery'
 import Button from './Button'
@@ -67,8 +67,20 @@ const ContactList = ({ people: prefetchedPeople }: ContactListProps): JSX.Elemen
     }
   }, [people.length])
 
+  const searchStatus = useMemo(
+    () =>
+      searching
+        ? `Searching for "${searchTerm}"...`
+        : searchResult?.length
+        ? `Results for "${searchTerm}":`
+        : !searching && searchResult?.length === 0
+        ? `No results for "${searchTerm}"`
+        : undefined,
+    [searchTerm, searching, searchResult?.length],
+  )
+
   return (
-    <div className={styles.contacts}>
+    <div className={styles.contacts} id="contact-list">
       <div className={styles.search}>
         <input
           type="text"
@@ -79,14 +91,10 @@ const ContactList = ({ people: prefetchedPeople }: ContactListProps): JSX.Elemen
           className={styles.searchInput}
         />
       </div>
-      {searching ? (
-        <div className={styles.searchStatus}>{`Searching for "${searchTerm}"...`}</div>
-      ) : undefined}
-      {searchResult?.length ? (
-        <div className={styles.searchStatus}>{`Results for "${searchTerm}":`}</div>
-      ) : undefined}
-      {!searching && searchResult?.length === 0 && (
-        <div className={styles.searchStatus}>{`No results for "${searchTerm}"`}</div>
+      {searchStatus && (
+        <div id="search-status" className={styles.searchStatus}>
+          {searchStatus}
+        </div>
       )}
       <div className={styles.grid}>
         {(searchResult || people).map((person, i) => (
@@ -105,7 +113,11 @@ const ContactList = ({ people: prefetchedPeople }: ContactListProps): JSX.Elemen
         </div>
       )}
       <br />
-      {error && <p className={styles.error}>{error.message}</p>}
+      {error && (
+        <p id="error" className={styles.error}>
+          {error.message}
+        </p>
+      )}
     </div>
   )
 }

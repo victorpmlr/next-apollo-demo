@@ -5,7 +5,7 @@ type ContactCardProps = People
 
 const ContactCard = ({ name, address, email, phone }: ContactCardProps): JSX.Element => {
   return (
-    <div className={styles.contactCard}>
+    <div className={'contact-card ' + styles.contactCard}>
       <h3>{name}</h3>
       <div>
         <p>📍 {address.streetAddress}</p>
