@@ -1,6 +1,9 @@
 import styles from './ContactCard.module.scss'
+import { People } from 'types'
 
-const ContactCard = ({ name, address, email, phone }) => {
+type ContactCardProps = People
+
+const ContactCard = ({ name, address, email, phone }: ContactCardProps): JSX.Element => {
   return (
     <div className={styles.contactCard}>
       <h3>{name}</h3>

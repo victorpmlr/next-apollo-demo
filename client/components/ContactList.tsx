@@ -4,19 +4,24 @@ import { useCallback, useEffect, useState } from 'react'
 import { apolloClient } from '../lib/apollo'
 import peopleQuery from '../lib/peopleQuery'
 import Button from './Button'
+import { People, PeopleData, PeopleVars } from 'types'
 
-const ContactList = ({ people: prefetchedPeople }) => {
+type ContactListProps = {
+  people: People[]
+}
+
+const ContactList = ({ people: prefetchedPeople }: ContactListProps): JSX.Element => {
   const [people, setPeople] = useState(prefetchedPeople)
-  const [searchTerm, setSearchTerm] = useState()
+  const [searchTerm, setSearchTerm] = useState<string>()
   const [searching, setSearching] = useState(false)
-  const [searchResult, setSearchResult] = useState()
+  const [searchResult, setSearchResult] = useState<People[] | undefined>()
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState()
+  const [error, setError] = useState<{ message: string }>()
 
   useEffect(() => {
     if (!searchTerm || searchTerm?.length < 3) {
       setSearching(false)
-      setSearchResult()
+      setSearchResult(undefined)
       return
     }
     setSearchResult([])
@@ -24,7 +29,7 @@ const ContactList = ({ people: prefetchedPeople }) => {
 
     const delayDebounce = setTimeout(async () => {
       try {
-        const result = await apolloClient.query({
+        const result = await apolloClient.query<PeopleData, PeopleVars>({
           query: peopleQuery,
           variables: { first: 20, name: searchTerm },
         })
@@ -47,7 +52,7 @@ const ContactList = ({ people: prefetchedPeople }) => {
   const handleLoadMore = useCallback(async () => {
     setLoading(true)
     try {
-      const result = await apolloClient.query({
+      const result = await apolloClient.query<PeopleData, PeopleVars>({
         query: peopleQuery,
         variables: { first: 20, after: people.length },
       })

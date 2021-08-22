@@ -8,7 +8,7 @@ const links = [
   { href: '/contacts', label: 'Contacts' },
 ]
 
-const Nav = () => {
+const Nav = (): JSX.Element => {
   const router = useRouter()
   return (
     <div className={styles.nav}>
