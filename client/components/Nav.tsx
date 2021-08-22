@@ -14,7 +14,7 @@ const Nav = (): JSX.Element => {
     <div className={styles.nav}>
       {links.map(({ href, label }) => (
         <Link key={href} href={href}>
-          <a className={router.asPath === href && styles.current}>{label}</a>
+          <a className={router.asPath === href ? styles.current : undefined}>{label}</a>
         </Link>
       ))}
     </div>
