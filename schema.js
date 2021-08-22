@@ -20,7 +20,7 @@ const typeDefs = gql`
   }
   type Query {
     name: String!
-    people(first: Int!, after: Int = 0, name: String): [Person]
+    people(first: Int!, offset: Int = 0, name: String): [Person]
   }
 `
 
