@@ -2,10 +2,9 @@ const express = require('express')
 const expressPlayground = require('graphql-playground-middleware-express').default
 const { ApolloServer } = require('apollo-server-express')
 const schema = require('./schema')
-const resolvers = require('./resolvers')
 
 const startApolloServer = async () => {
-  const server = new ApolloServer({ typeDefs: schema, resolvers })
+  const server = new ApolloServer({ schema })
   await server.start()
 
   const app = express()
