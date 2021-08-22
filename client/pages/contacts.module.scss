@@ -47,12 +47,21 @@
     }
   }
 
+  .error {
+    width: 100%;
+    max-width: 80rem;
+    margin: 0 auto;
+    text-align: center;
+    color: tomato;
+  }
+
   .grid {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
 
     & > * {
-      flex: 0 1 20rem;
+      flex: 0 1 16rem;
       margin: 1rem;
     }
   }

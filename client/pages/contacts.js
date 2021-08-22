@@ -23,15 +23,20 @@ const Contacts = ({ people: prefetchedPeople }) => {
     setSearching(true)
 
     const delayDebounce = setTimeout(async () => {
-      const result = await apolloClient.query({
-        query,
-        variables: { first: 20, name: searchTerm },
-      })
-      if (result.data?.people) {
-        setSearchResult(result.data.people)
+      try {
+        const result = await apolloClient.query({
+          query,
+          variables: { first: 20, name: searchTerm },
+        })
+        if (result.data?.people) {
+          setSearchResult(result.data.people)
+        }
+        setError(result.error)
+      } catch (e) {
+        setError(e)
+      } finally {
+        setSearching(false)
       }
-      setError(result.error)
-      setSearching(false)
     }, 300)
 
     return () => {
@@ -41,15 +46,20 @@ const Contacts = ({ people: prefetchedPeople }) => {
 
   const handleLoadMore = useCallback(async () => {
     setLoading(true)
-    const result = await apolloClient.query({
-      query,
-      variables: { first: 20, after: people.length },
-    })
-    if (result.data?.people) {
-      setPeople((ppl) => ppl.concat(result.data.people))
+    try {
+      const result = await apolloClient.query({
+        query,
+        variables: { first: 20, after: people.length },
+      })
+      if (result.data?.people) {
+        setPeople((ppl) => ppl.concat(result.data.people))
+      }
+      setError(result.error)
+    } catch (e) {
+      setError(e)
+    } finally {
+      setLoading(false)
     }
-    setError(result.error)
-    setLoading(false)
   }, [people.length])
 
   return (
@@ -93,7 +103,7 @@ const Contacts = ({ people: prefetchedPeople }) => {
         </div>
       )}
       <br />
-      {error && <pre>{JSON.stringify(error)}</pre>}
+      {error && <p className={styles.error}>{error.message}</p>}
       <br />
       <Link href="/">
         <a>Home</a>
