@@ -4,7 +4,7 @@ const Name = () => {
   const { data, loading, error } = useQuery(query)
 
   if (error) {
-    return <code>{JSON.stringify(error)}</code>
+    return <p>{error.message}</p>
   }
 
   return <span>{loading ? '..' : data?.name}</span>
