@@ -1,4 +1,9 @@
 const { gql } = require('apollo-server-express')
+const { createRateLimitRule } = require('graphql-rate-limit')
+const { applyMiddleware } = require('graphql-middleware')
+const { makeExecutableSchema } = require('@graphql-tools/schema')
+const { shield } = require('graphql-shield')
+const resolvers = require('./resolvers')
 
 const typeDefs = gql`
   type Address {
@@ -19,4 +24,20 @@ const typeDefs = gql`
   }
 `
 
-module.exports = typeDefs
+const rateLimitRule = createRateLimitRule({ identifyContext: (ctx) => ctx.id })
+
+const permissions = shield({
+  Query: {
+    people: rateLimitRule({ window: '1s', max: 5 }),
+  },
+})
+
+const schema = applyMiddleware(
+  makeExecutableSchema({
+    typeDefs,
+    resolvers,
+  }),
+  permissions,
+)
+
+module.exports = schema
