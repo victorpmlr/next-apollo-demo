@@ -1,0 +1,39 @@
+version: "3"
+
+## NOT WORKING
+# client can't connect to server, http://localhost:3000/contacts raises:
+#   Error: request to http://localhost:5000/graphql failed,
+#   reason: connect ECONNREFUSED 127.0.0.1:5000
+##
+
+networks:
+  app-tier:
+    driver: bridge
+
+services:
+  server:
+    ports:
+      - 5000:5000
+    expose:
+      - 5000
+    networks:
+      - app-tier
+    build:
+      context: ./server
+      dockerfile: ./Dockerfile
+    restart: unless-stopped
+    command: yarn start
+
+  client:
+    depends_on:
+      - server
+    ports:
+      - 3000:3000
+    networks:
+      - app-tier
+    build:
+      context: ./client
+      dockerfile: ./Dockerfile
+    restart: unless-stopped
+    # command: yarn prod
+    command: yarn dev
