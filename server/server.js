@@ -16,7 +16,7 @@ const startApolloServer = async () => {
   await new Promise((resolve) => app.listen({ port }, resolve))
 
   console.log(`Graphql Server started on: http://localhost:${port}${server.graphqlPath}`)
-  console.log(`Graphql Playground: http://localhost:${port}/playground`)
+  console.log(`Graphql Playground: http://localhost:${port}/graphql`)
 
   return { server, app }
 }
