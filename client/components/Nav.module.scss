@@ -1,0 +1,19 @@
+
+.nav {
+  text-align: center;
+  margin-top: 2rem;
+  padding: 2rem;
+  border-top: solid 1px gray;
+
+  a {
+    display: inline;
+    margin: 0 1rem;
+    color: teal;
+
+  }
+
+  .current {
+    color: darkblue;
+    text-decoration: none;
+  }
+}

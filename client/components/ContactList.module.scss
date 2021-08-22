@@ -1,11 +1,9 @@
 
 .contacts {
-  font-family: 'Gill Sans', Calibri, sans-serif;
-
   .search {
     width: 100%;
     max-width: 30rem;
-    margin: 0 auto;
+    margin: 2rem auto;
 
     &Input {
       width: 100%;
@@ -29,22 +27,7 @@
   .loadMore {
     width: 100%;
     max-width: 20rem;
-    margin: 0 auto;
-
-    &Button {
-      width: 100%;
-      font-size: 120%;
-      padding: 1rem;
-      border-radius: 0.5rem;
-      background: white;
-      border: solid 1px lightgray;
-      outline: none;
-      cursor: pointer;
-
-      &:hover {
-        border-color: gray;
-      }
-    }
+    margin: 2rem auto;
   }
 
   .error {

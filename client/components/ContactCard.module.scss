@@ -1,8 +1,8 @@
 
 .contactCard {
-  border: solid 1px mistyrose;
+  border: solid 1px thistle;
   border-radius: 1rem;
-  background-color: seashell;
+  background-color: ghostwhite;
   padding: 1rem;
 
   p {
@@ -11,7 +11,9 @@
   }
 
   h3 {
+    margin: 0.8rem 0;
     text-align: center;
+    font-family: Georgia, 'Times New Roman', Times, serif;
   }
 
   div {
