@@ -62,7 +62,12 @@ const ContactList = ({ people: prefetchedPeople }: ContactListProps): JSX.Elemen
   }, [searchTerm])
 
   const handleLoadMore = useCallback(async () => {
-    await fetchPeople({ first: 20, offset: people.length }, setPeople, setLoading, setError)
+    await fetchPeople(
+      { first: 20, offset: people.length },
+      (newPeople) => setPeople((ppl) => ppl.concat(newPeople)),
+      setLoading,
+      setError,
+    )
   }, [people.length])
 
   const searchStatus = useMemo(
