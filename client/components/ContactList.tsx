@@ -1,13 +1,36 @@
 import ContactCard from './ContactCard'
 import styles from './ContactList.module.scss'
 import { useCallback, useEffect, useState, useMemo } from 'react'
-import { apolloClient } from '../lib/apollo'
-import peopleQuery from '../lib/peopleQuery'
+import { apolloClient } from 'lib/apollo'
+import peopleQuery from 'lib/peopleQuery'
 import Button from './Button'
 import { People, PeopleData, PeopleVars } from 'types'
 
 type ContactListProps = {
   people: People[]
+}
+
+const fetchPeople = async (
+  variables: PeopleVars,
+  resultHandler: (people: People[]) => void,
+  loadingHandler: (loading: boolean) => void,
+  errorHandler: (error: { message: string }) => void,
+) => {
+  loadingHandler(true)
+  try {
+    const result = await apolloClient.query<PeopleData, PeopleVars>({
+      query: peopleQuery,
+      variables,
+    })
+    if (result.data?.people) {
+      resultHandler(result.data.people)
+    }
+    errorHandler(result.error)
+  } catch (e) {
+    errorHandler(e)
+  } finally {
+    loadingHandler(false)
+  }
 }
 
 const ContactList = ({ people: prefetchedPeople }: ContactListProps): JSX.Element => {
@@ -28,20 +51,7 @@ const ContactList = ({ people: prefetchedPeople }: ContactListProps): JSX.Elemen
     setSearching(true)
 
     const delayDebounce = setTimeout(async () => {
-      try {
-        const result = await apolloClient.query<PeopleData, PeopleVars>({
-          query: peopleQuery,
-          variables: { first: 20, name: searchTerm },
-        })
-        if (result.data?.people) {
-          setSearchResult(result.data.people)
-        }
-        setError(result.error)
-      } catch (e) {
-        setError(e)
-      } finally {
-        setSearching(false)
-      }
+      await fetchPeople({ first: 20, name: searchTerm }, setSearchResult, setSearching, setError)
     }, 300)
 
     return () => {
@@ -50,21 +60,7 @@ const ContactList = ({ people: prefetchedPeople }: ContactListProps): JSX.Elemen
   }, [searchTerm])
 
   const handleLoadMore = useCallback(async () => {
-    setLoading(true)
-    try {
-      const result = await apolloClient.query<PeopleData, PeopleVars>({
-        query: peopleQuery,
-        variables: { first: 20, offset: people.length },
-      })
-      if (result.data?.people) {
-        setPeople((ppl) => ppl.concat(result.data.people))
-      }
-      setError(result.error)
-    } catch (e) {
-      setError(e)
-    } finally {
-      setLoading(false)
-    }
+    await fetchPeople({ first: 20, offset: people.length }, setPeople, setLoading, setError)
   }, [people.length])
 
   const searchStatus = useMemo(
