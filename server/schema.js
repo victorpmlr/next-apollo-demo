@@ -5,6 +5,8 @@ const { makeExecutableSchema } = require('@graphql-tools/schema')
 const { shield } = require('graphql-shield')
 const resolvers = require('./resolvers')
 
+// GraphQL Type definitions
+
 const typeDefs = gql`
   type Address {
     streetAddress: String
@@ -23,6 +25,9 @@ const typeDefs = gql`
     people(first: Int!, offset: Int = 0, name: String): [Person]
   }
 `
+
+// Setting a rate limit to avoid too many queries
+// using graphql-rate-limit & graphql-shield
 
 const rateLimitRule = createRateLimitRule({ identifyContext: (ctx) => ctx.id })
 

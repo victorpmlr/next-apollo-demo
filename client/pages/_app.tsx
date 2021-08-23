@@ -5,6 +5,11 @@ import { apolloClient } from 'lib/apollo'
 import './global.scss'
 import Nav from 'components/Nav'
 
+// NextJS App entry point
+// importing global css
+// Add <title> and nav to all pages
+// ApolloProvider needed to use hooks (useQuery / useLazyQuery / useMutation)
+
 const App = ({ Component, pageProps }: AppProps): JSX.Element => {
   return (
     <>

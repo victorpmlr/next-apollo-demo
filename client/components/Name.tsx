@@ -3,6 +3,8 @@ import nameQuery from 'lib/nameQuery'
 import { NameData } from 'types'
 import Loading from './Loading'
 
+// Using @apollo/client's useQuery for simple GraphQL fetch
+
 const Name = (): JSX.Element => {
   const { data, loading, error } = useQuery<NameData>(nameQuery)
 

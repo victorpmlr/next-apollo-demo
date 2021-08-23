@@ -22,6 +22,9 @@ const Contacts = ({ people }: ContactsProps): JSX.Element => {
   )
 }
 
+// SSR: fetching the first 20 people, will be kept as JSON at build time
+// and served at page load
+
 export const getStaticProps: GetStaticProps<ContactsProps> = async () => {
   const result = await apolloClient.query<PeopleData, PeopleVars>({
     query: peopleQuery,

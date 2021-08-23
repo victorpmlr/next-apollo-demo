@@ -10,6 +10,7 @@ type ContactListProps = {
   people: People[]
 }
 
+// Fetch people from apolloClient
 const fetchPeople = async (
   variables: PeopleVars,
   resultHandler: (people: People[]) => void,
@@ -50,6 +51,7 @@ const ContactList = ({ people: prefetchedPeople }: ContactListProps): JSX.Elemen
     setSearchResult([])
     setSearching(true)
 
+    // Debounce so we don't fetch on every char typed (would raise rate limit)
     const delayDebounce = setTimeout(async () => {
       await fetchPeople({ first: 20, name: searchTerm }, setSearchResult, setSearching, setError)
     }, 300)

@@ -3,6 +3,9 @@ const expressPlayground = require('graphql-playground-middleware-express').defau
 const { ApolloServer } = require('apollo-server-express')
 const schema = require('./schema')
 
+// Starting Express with ApolloServer endpoint on /graphql
+// and a GraphQL express playground on /playground
+
 const startApolloServer = async () => {
   const server = new ApolloServer({ schema })
   await server.start()
